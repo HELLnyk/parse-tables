@@ -22,16 +22,16 @@ public class Work {
     /**
      * Parameters for changing START.
      */
-    private static final String TABLE_ONE = "/Users/HELLnyk/work/romap-data/alex_11_02_17/csv/20number.csv";
-    private static final String TABLE_TWO = "/Users/HELLnyk/work/romap-data/alex_11_02_17/csv/hip.csv";
-    private static final String RESULT_FILENAME = "/Users/HELLnyk/work/romap-data/alex_11_02_17/csv/result.csv";
+    private static final String TABLE_ONE = "*put path to file*";
+    private static final String TABLE_TWO = "*put path to file*";
+    private static final String RESULT_FILENAME = "*put path to file*";
     /**
      * Parameters for changing END.
      */
 
-    private static final String TABLE_THREE = "/Users/HELLnyk/work/romap-data/alex_11_02_17/csv/data3parameters.csv";
-    private static final String TABLE_FOUR =  "/Users/HELLnyk/work/romap-data/alex_11_02_17/csv/paymentaccountsdata.csv";
-    private static final String CHARSET_NAME = "UTF-8";
+    private static final String TABLE_THREE = "*put path to file*";
+    private static final String TABLE_FOUR =  "*put path to file*";
+    private static final String CHARSET_NAME = "*put file encoding*";
 
     private static boolean writeOnce = true;
     private static BufferedWriter writer;
@@ -211,7 +211,6 @@ public class Work {
             bReader.readLine();
             String line;
             while ((line = bReader.readLine()) != null) {
-//                line = getSomeString(line);
                 String[] elements = line.split(",");
                 if(email.equals(elements[0])) {
                     row.setBirthday(elements[1]);
