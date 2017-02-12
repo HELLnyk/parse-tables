@@ -31,7 +31,7 @@ public class Work {
 
     private static final String TABLE_THREE = "*put path to file*";
     private static final String TABLE_FOUR =  "*put path to file*";
-    private static final String CHARSET_NAME = "*put file encoding*";
+    private static final String CHARSET_NAME = "UTF-8";         //base encoding
 
     private static boolean writeOnce = true;
     private static BufferedWriter writer;
@@ -60,7 +60,6 @@ public class Work {
 
         try (BufferedReader bReaderSecondTable = new BufferedReader(new InputStreamReader(new FileInputStream(new File(TABLE_TWO)), Charset.forName(CHARSET_NAME)))) {
            String rowTableTwo = bReaderSecondTable.readLine();
-//           String rowTableTwo = getSomeString(bReaderSecondTable.readLine());
            TableTwoBean headerTwo = createTableTwoBean(rowTableTwo);
 
            if(writeOnce) {
@@ -69,7 +68,6 @@ public class Work {
 
            while ((rowTableTwo = bReaderSecondTable.readLine()) != null) {
                TableTwoBean rowTwo = createTableTwoBean(rowTableTwo);
-//               TableTwoBean rowTwo = createTableTwoBean(getSomeString(rowTableTwo));
 
                if(rowOne.getEmail().equals(rowTwo.getEmail())) {
                    isEmailExists = true;
@@ -274,9 +272,5 @@ public class Work {
     private static String getName(String holder) {
         String[] data = holder.split(" ", 2);
         return data[0];
-    }
-
-    private static String getSomeString(String s) {
-        return new String(s.getBytes(), 0, s.length(), Charset.forName(CHARSET_NAME));
     }
 }
