@@ -1,0 +1,7 @@
+#ignore don"t needed files
+*.iml
+.idea/
+out/
+
+# MAC .DS_Store
+.DS_Store
