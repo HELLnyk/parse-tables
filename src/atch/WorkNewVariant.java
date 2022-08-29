@@ -5,6 +5,7 @@ import atch.bean.HipBean;
 import atch.bean.InputUserBean;
 import atch.util.ATCHFileReaderUtil;
 import atch.util.StoreMaps;
+import v2.ExistingIdsReader;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -22,12 +23,12 @@ import java.util.Map;
 /**
  * @author ykalapusha
  */
-public class Work {
+public class WorkNewVariant {
 
-    public static final String INPUT_USERS_DATA_FILE = "/Users/hellnyk/work/romap-data/atch/3/59-1.csv";
-    public static final String HIP_FILE = "/Users/hellnyk/work/romap-data/atch/3/chat070120.csv";
-    public static final String DATA_FILE = "/Users/hellnyk/work/romap-data/atch/3/data_for_hip_script.csv";
-    public static final String RESULT_FILE = "/Users/hellnyk/work/romap-data/atch/3/result_59-1_withRegEmail.csv";
+    public static final String INPUT_USERS_DATA_FILE = "/Users/hellnyk/work/romap-data/new_variant/34/sc_list_14-06-2021.csv";
+    public static final String HIP_FILE = "/Users/hellnyk/work/romap-data/new_variant/34/chat-200721.csv";
+    public static final String DATA_FILE = "/Users/hellnyk/work/romap-data/new_variant/34/data_for_hip_script.csv";
+    public static final String RESULT_FILE = "/Users/hellnyk/work/romap-data/new_variant/34/scorecontrol_result.csv";
 
     public static final String CHARSET_NAME = "UTF-8";
     public static final DateFormat HIP_DATE_FORMAT = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss");
@@ -41,6 +42,7 @@ public class Work {
 
     private static int tryToFindByRegEmailCounter = 0;
     private static int byRegEmailCounter = 0;
+    private static int skipped = 0;
 
     private static BufferedWriter resultFileWriter;
 
@@ -62,6 +64,7 @@ public class Work {
         long end = System.currentTimeMillis();
         System.out.println("Process time: " + (end - start) / 1000 + " seconds.");
         System.out.println("There is no data for current email: " + tryToFindByRegEmailCounter + " , found by reg email: " + byRegEmailCounter);
+        System.out.println("Skipped: " + skipped);
         System.out.println("DONE");
     }
 
@@ -72,13 +75,16 @@ public class Work {
     }
 
     private static void processWork(List<InputUserBean> inputUserBeans, Map<String, List<HipBean>> hipMap, StoreMaps storeMaps) throws IOException {
-        for (InputUserBean inputUserBean: inputUserBeans) {
-            HipBean hipBean = getHipBeanForUser(hipMap, inputUserBean.getEmail(), inputUserBean.getDatum());
-//            DataBean dataBean = userDataMap.get(inputUserBean.getEmail());
-//            if (dataBean == null)
-//                dataBean = new DataBean();
+        List<String> existingIds = ExistingIdsReader.getExistingIds();
 
+        for (InputUserBean inputUserBean: inputUserBeans) {
             DataBean dataBean = getDataBean(inputUserBean.getEmail(), storeMaps);
+            if (existingIds.contains(dataBean.getAccountId())) {
+                skipped++;
+                continue;
+            }
+
+            HipBean hipBean = getHipBeanForUser(hipMap, inputUserBean.getEmail(), inputUserBean.getDatum());
             writeToFileElements(inputUserBean, hipBean, dataBean);
         }
     }
@@ -119,7 +125,8 @@ public class Work {
         sb.append("\"").append(getCity(dataBean)).append("\";");
         sb.append("\"").append(dataBean.getFamilyStatus()).append("\";");
         sb.append("\"").append(dataBean.getLastLoginDate()).append("\";");
-        sb.append("\"").append(dataBean.getLocationToMeet()).append("\"\n");
+        sb.append("\"").append(dataBean.getLocationToMeet()).append("\";");
+        sb.append("\"").append(hipBean.getPayId()).append("\"\n");
 
         resultFileWriter.write(sb.toString());
     }

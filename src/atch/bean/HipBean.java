@@ -12,16 +12,18 @@ public class HipBean {
     private String currency;
     private String email;
     private String date;
+    private String payId;
 
     public HipBean() {
     }
 
-    public HipBean(String txnId, String amount, String currency, String email, String date) {
+    public HipBean(String txnId, String amount, String currency, String email, String date, String payId) {
         this.txnId = txnId;
         this.amount = amount;
         this.currency = currency;
         this.email = email;
         this.date = date;
+        this.payId = payId;
     }
 
     public String getTxnId() {
@@ -42,5 +44,9 @@ public class HipBean {
 
     public String getDate() {
         return date;
+    }
+
+    public String getPayId() {
+        return payId;
     }
 }

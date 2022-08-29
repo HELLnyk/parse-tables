@@ -5,6 +5,9 @@ import parser.util.ValueHelper;
 
 import java.io.*;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -22,23 +25,26 @@ public class Work {
     /**
      * Parameters for changing START.
      */
-    private static final String TABLE_ONE = "*put path to file*";
-    private static final String TABLE_TWO = "*put path to file*";
-    private static final String RESULT_FILENAME = "*put path to file*";
+    private static final String TABLE_ONE = "/Users/HELLnyk/work/romap-data/alex56/54.csv";
+    private static final String TABLE_TWO = "/Users/HELLnyk/work/romap-data/alex56/040919_2.csv";
+    private static final String RESULT_FILENAME = "/Users/HELLnyk/work/romap-data/alex56/result_54.csv";
     /**
      * Parameters for changing END.
      */
 
-    private static final String TABLE_THREE = "*put path to file*";
-    private static final String TABLE_FOUR =  "*put path to file*";
+    private static final String TABLE_THREE = "/Users/HELLnyk/work/romap-data/data3parameters.csv";
+    private static final String TABLE_FOUR =  "/Users/HELLnyk/work/romap-data/paymentaccountsdata.csv";
     private static final String CHARSET_NAME = "UTF-8";         //base encoding
 
     private static boolean writeOnce = true;
     private static BufferedWriter writer;
 
     public static void main(String[] args) throws IOException {
+        long start = System.currentTimeMillis();
         writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(new File(RESULT_FILENAME)), Charset.forName(CHARSET_NAME)));
+//        writer = Files.newBufferedWriter(Paths.get(RESULT_FILENAME), StandardCharsets.UTF_8, StandardOpenOption.CREATE, StandardOpenOption.WRITE);
         BufferedReader bReaderFirstTable = new BufferedReader(new InputStreamReader(new FileInputStream(new File(TABLE_ONE)), Charset.forName(CHARSET_NAME)));
+//        BufferedReader bReaderFirstTable = Files.newBufferedReader(Paths.get(TABLE_ONE), StandardCharsets.UTF_8);
 
         String rowTableOne = bReaderFirstTable.readLine();
         TableOneBean header = createTableOneBean(rowTableOne);
@@ -50,6 +56,10 @@ public class Work {
         bReaderFirstTable.close();
         writer.flush();
         writer.close();
+
+        long end = System.currentTimeMillis();
+        System.out.println("Process time: " + (end - start) / 1000 + " seconds.");
+        System.out.println("DONE");
     }
 
     private static void createTable(TableOneBean headerOne, TableOneBean rowOne) throws IOException {
@@ -58,7 +68,9 @@ public class Work {
         ArrayList<Boolean> dateEqual = new ArrayList<>();
         boolean isEmailExists = false;
 
-        try (BufferedReader bReaderSecondTable = new BufferedReader(new InputStreamReader(new FileInputStream(new File(TABLE_TWO)), Charset.forName(CHARSET_NAME)))) {
+
+        try(BufferedReader bReaderSecondTable = new BufferedReader(new InputStreamReader(new FileInputStream(new File(TABLE_TWO)), Charset.forName(CHARSET_NAME)))) {
+//        try (BufferedReader bReaderSecondTable = Files.newBufferedReader(Paths.get(TABLE_TWO), StandardCharsets.UTF_8)) {
            String rowTableTwo = bReaderSecondTable.readLine();
            TableTwoBean headerTwo = createTableTwoBean(rowTableTwo);
 
@@ -149,12 +161,13 @@ public class Work {
 
     private static void workWithPayment(ArrayList<TableMainBean> result) {
         for (TableMainBean tableMainBean : result) {
-            try (BufferedReader bReader = new BufferedReader(new InputStreamReader(new FileInputStream(new File(TABLE_FOUR)), Charset.forName(CHARSET_NAME)))) {
+//            BufferedReader bReader = new BufferedReader(new InputStreamReader(new FileInputStream(new File(TABLE_FOUR)), Charset.forName(CHARSET_NAME)))
+            try (BufferedReader bReader = Files.newBufferedReader(Paths.get(TABLE_FOUR), StandardCharsets.UTF_8)) {
                 bReader.readLine();
                 String line;
                 while ((line = bReader.readLine()) != null) {
 //                    line = getSomeString(line);
-                    String[] parameters = line.split(",");
+                    String[] parameters = line.split(";");
                     TableFourBean payment = new TableFourBean(parameters[0], parameters[1], parameters[2], parameters[3], parameters[4]);
                     if (tableMainBean.tableOneBean.getEmail().equals(payment.getEmail())) {
                         setPayment(tableMainBean, payment);
@@ -205,11 +218,12 @@ public class Work {
 
     private static TableThreeBean getRegistrationDateAndBirtday(String email) {
         TableThreeBean row = new TableThreeBean("**undefined**" , "**undefined**");
-        try (BufferedReader bReader = new BufferedReader(new InputStreamReader(new FileInputStream(new File(TABLE_THREE)), Charset.forName(CHARSET_NAME)))) {
+//      BufferedReader bReader = new BufferedReader(new InputStreamReader(new FileInputStream(new File(TABLE_THREE)), Charset.forName(CHARSET_NAME)))
+        try (BufferedReader bReader = Files.newBufferedReader(Paths.get(TABLE_THREE), StandardCharsets.UTF_8)) {
             bReader.readLine();
             String line;
             while ((line = bReader.readLine()) != null) {
-                String[] elements = line.split(",");
+                String[] elements = line.split(";");
                 if(email.equals(elements[0])) {
                     row.setBirthday(elements[1]);
                     row.setRegistrationDate(elements[2]);

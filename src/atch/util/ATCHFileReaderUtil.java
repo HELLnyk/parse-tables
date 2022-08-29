@@ -16,7 +16,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import static atch.Work.*;
+import static atch.WorkNewVariant.*;
 
 /**
  * @author ykalapusha
@@ -54,7 +54,7 @@ public class ATCHFileReaderUtil {
 
     private static void createHipBean(String line, String keyParam,  Map<String, List<HipBean>> map) {
         String[] els = line.split(";");
-        HipBean bean = new HipBean(els[0], els[1], els[2], els[3].toLowerCase(), els[4]);
+        HipBean bean = new HipBean(els[0], els[1], els[2], els[3].toLowerCase(), els[5], els[4]);
         String key = keyParam == null ? bean.getEmail() : keyParam;
         List<HipBean> value = map.computeIfAbsent(key, k -> new ArrayList<>());
         value.add(bean);

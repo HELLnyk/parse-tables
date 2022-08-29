@@ -25,22 +25,22 @@ public class InputUserBean {
     private String comment;
 
     public InputUserBean(String betrag, String debitCredit, String email, String ipLand, String wahr, String meth, String datum, String txnType, String quelle, String inhaber, String kartenTyp, String kartenNr, String bin, String shortId, String fehlerText, String comment) {
-        this.betrag = betrag;
-        this.debitCredit = debitCredit;
-        this.email = email;
-        this.ipLand = ipLand;
-        this.wahr = wahr;
-        this.meth = meth;
-        this.datum = datum;
-        this.txnType = txnType;
-        this.quelle = quelle;
-        this.inhaber = inhaber;
-        this.kartenTyp = kartenTyp;
-        this.kartenNr = kartenNr;
-        this.bin = bin;
-        this.shortId = shortId;
-        this.fehlerText = fehlerText;
-        this.comment = comment;
+        this.betrag = betrag.trim();
+        this.debitCredit = debitCredit.trim();
+        this.email = email.trim();
+        this.ipLand = ipLand.trim();
+        this.wahr = wahr.trim();
+        this.meth = meth.trim();
+        this.datum = datum.trim();
+        this.txnType = txnType.trim();
+        this.quelle = quelle.trim();
+        this.inhaber = inhaber.trim();
+        this.kartenTyp = kartenTyp.trim();
+        this.kartenNr = kartenNr.trim();
+        this.bin = bin.trim();
+        this.shortId = shortId.trim();
+        this.fehlerText = fehlerText.trim();
+        this.comment = comment.trim();
     }
 
 
